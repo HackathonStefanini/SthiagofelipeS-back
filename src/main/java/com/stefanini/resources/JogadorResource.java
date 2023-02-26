@@ -1,5 +1,8 @@
 package com.stefanini.resources;
 
+import com.stefanini.dto.JogadorAuthDTO;
+import com.stefanini.dto.JogadorDTO;
+import com.stefanini.dto.StefamonDTO;
 import com.stefanini.entity.Jogador;
 import com.stefanini.service.JogadorService;
 
@@ -44,5 +47,26 @@ public class JogadorResource {
         jogadorService.deletar(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+    
+    @POST
+    @Path("/cadastro")
+    public Response cadastrarJogador(@Valid JogadorDTO jogador) {
+    	 jogadorService.cadastrar(jogador);
+         return Response.status(Response.Status.CREATED).build();
+    }
 
+    @POST
+    @Path("/login")
+    public Response logarJogador(@Valid JogadorAuthDTO jogador) {
+    	 JogadorDTO dto = jogadorService.logar(jogador);
+         return Response.status(Response.Status.CREATED).entity(dto).build();
+    }
+    
+    @POST
+    @Path("/comprar")
+    public Response comprarStefamons(@Valid JogadorDTO jogador,  @Valid StefamonDTO stefamon) {
+    	jogadorService.comprarStefamon(jogador, stefamon);
+    	return Response.status(Response.Status.OK).entity(jogador).build();
+    }
+    
 }
