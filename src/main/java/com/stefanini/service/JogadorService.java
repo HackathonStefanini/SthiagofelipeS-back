@@ -1,5 +1,6 @@
 package com.stefanini.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -101,6 +102,37 @@ public class JogadorService {
 		
 		salvar(JogadorParser.DtotoEntity(jogador));
 			
+    }
+    
+    private void validarJogadorBatalhar(JogadorDTO jogador) {
+    	if(jogador.getStefamons().isEmpty()) {
+    		throw new RegraDeNegocioException("Essa batalha não pode ser realizada. Verifique se voçê ou seu adversário tem Stefamons.", Response.Status.BAD_REQUEST);
+    	}
+    	
+    	if(Objects.isNull(jogadorRepository.findById(jogador.getId()))) {
+    		throw new RegraDeNegocioException("Essa batalha não foi realizada.", Response.Status.NOT_FOUND);
+    	}
+    	
+    }
+    
+    public String batalhar(JogadorDTO jogador, JogadorDTO adversario) {
+    	validarJogadorBatalhar(jogador);
+    	validarJogadorBatalhar(adversario);
+    	
+    	int valorAtaque = jogador.getStefamons().stream().mapToInt(s -> s.getStefamonValor()).sum();
+    	int valorAdvers = adversario.getStefamons().stream().mapToInt(s -> s.getStefamonValor()).sum();
+    	
+    	
+    	jogador.setSaldo(BigDecimal.valueOf(jogador.getSaldo().doubleValue()+(valorAdvers- valorAtaque)));
+    	adversario.setSaldo(BigDecimal.valueOf(adversario.getSaldo().doubleValue()+(valorAdvers - valorAtaque)));
+    	
+    	salvar(JogadorParser.DtotoEntity(jogador));
+    	salvar(JogadorParser.DtotoEntity(adversario));
+    	
+    	if( valorAtaque >= valorAdvers) {
+    		return "Você venceu";
+    	}
+    	return "Você perdeu";
     }
     
 }

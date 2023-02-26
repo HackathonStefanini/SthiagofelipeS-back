@@ -41,8 +41,8 @@ public class Jogador {
 
     @ManyToMany
     @JoinTable(name = "Jogador_Stefamon",
-            joinColumns = {@JoinColumn(name = "IdJogador")},
-            inverseJoinColumns = {@JoinColumn(name = "IdStefamon")})
+            joinColumns = {@JoinColumn(name = "id_jogador")},
+            inverseJoinColumns = {@JoinColumn(name = "id")})
     private List<Stefamon> stefamons = new ArrayList<>();
 
     public Jogador() {

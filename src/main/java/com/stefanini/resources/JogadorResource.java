@@ -69,4 +69,10 @@ public class JogadorResource {
     	return Response.status(Response.Status.OK).entity(jogador).build();
     }
     
+    @POST
+    @Path("/batalhar")
+    public Response batalharContraAdversário(@Valid JogadorDTO jogador, @Valid JogadorDTO adversario) {
+    	String resposta = jogadorService.batalhar(jogador, adversario);
+    	return Response.status(Response.Status.OK).entity(resposta).build();
+    }
 }
